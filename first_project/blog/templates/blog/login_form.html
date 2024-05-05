@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+
+{% block header %}
+{% include 'components/_header.html' %}
+{% endblock header %}
+
+
+{% block main %}
+<div class="container">
+    <form action="" method="post">
+        {% csrf_token %}
+<!--        <p>{{ form.username }}</p>-->
+<!--        <p>{{ form.password }}</p>-->
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Kirish</button>
+    </form>
+</div>
+
+{% endblock main %}

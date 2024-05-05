@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block header %}
+{% include 'components/_header.html' %}
+{% endblock header %}
+
+{% block main %}
+<div class="container">
+    <div class="d-flex justify-content-between">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        Kategoriyasi: {{ article.category.title }}
+                    </div>
+                    <div>
+                        <a href="#" class="btn btn-secondary">Ortga</a>
+                        <a href="{% url 'delete' article.pk %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'edit' article.pk %}" class="btn btn-warning">Edit</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <img src="{{ article.get_photo }}" class="card-img-top" alt="">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.content|linebreaks }}</p>
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-between">
+                    <div>
+                        Chop etilgan sana: {{ article.created_at|date:'d-M-Y H:m:s' }}
+                    </div>
+                    <div>
+                        Ma'lumotni yangilangan sanasi: {{ article.updated_at|date:'d-M-Y H:m:s' }}
+                    </div>
+                </div>
+            </div>
+            {% for comment in comments %}
+            <div class="card">
+                <div class="card-header">
+                    {{ request.user.username }}
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p>{{ comment.text }}</p>
+                        <footer class="blockquote-footer">
+                            {{ comment.created_at }}
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if request.user.is_authenticated %}
+            <h4>
+                Добавить коммент
+            </h4>
+            <form action="{% url 'add_comment' article.pk %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ comment_form.text }}
+                <button type="submit" class="btn btn-primary">
+                    Отправить
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock main %}
